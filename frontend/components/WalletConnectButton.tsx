@@ -195,7 +195,7 @@ export default function WalletConnectButton() {
   // Mobile Wallet Options Modal
   if (showMobileOptions) {
     return (
-      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-4 overflow-y-auto">
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[9999] flex items-end sm:items-center justify-center p-4 overflow-y-auto">
         <div className="bg-dark-light rounded-3xl shadow-2xl max-w-md w-full p-5 border border-primary/20 my-auto">
           <h2 className="text-xl font-bold text-white mb-1">Connect Wallet</h2>
           <p className="text-gray-400 text-xs mb-4">
