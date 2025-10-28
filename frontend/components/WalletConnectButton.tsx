@@ -84,8 +84,47 @@ export default function WalletConnectButton() {
     }
   }
 
+  function isMobile() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    );
+  }
+
+  function openWalletApp() {
+    const currentUrl = window.location.href;
+    const dappUrl = encodeURIComponent(currentUrl);
+
+    // Try Core Wallet first (better for Avalanche)
+    const coreWalletUrl = `https://wallet.avax.network/dapp?url=${dappUrl}`;
+
+    // Fallback to MetaMask
+    const metamaskUrl = `https://metamask.app.link/dapp/${window.location.host}${window.location.pathname}`;
+
+    // Try opening Core Wallet
+    window.location.href = coreWalletUrl;
+
+    // If user doesn't have Core, show instructions after a delay
+    setTimeout(() => {
+      const shouldTryMetaMask = confirm(
+        "Don't have Core Wallet? Click OK to try MetaMask instead."
+      );
+      if (shouldTryMetaMask) {
+        window.location.href = metamaskUrl;
+      }
+    }, 2000);
+  }
+
   async function connectWallet() {
-    if (typeof window === 'undefined' || !window.ethereum) {
+    if (typeof window === 'undefined') return;
+
+    // Mobile: Deep link to wallet app if no provider detected
+    if (isMobile() && !window.ethereum) {
+      openWalletApp();
+      return;
+    }
+
+    // Desktop or mobile with wallet installed
+    if (!window.ethereum) {
       toast.error('Please install MetaMask or Core Wallet');
       return;
     }
