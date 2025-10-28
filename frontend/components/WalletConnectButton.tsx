@@ -84,42 +84,38 @@ export default function WalletConnectButton() {
     }
   }
 
+  const [showMobileOptions, setShowMobileOptions] = useState(false);
+
   function isMobile() {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
       navigator.userAgent
     );
   }
 
-  function openWalletApp() {
+  function openInMetaMask() {
+    const currentUrl = window.location.href;
+    const metamaskUrl = `https://metamask.app.link/dapp/${window.location.host}${window.location.pathname}`;
+    window.open(metamaskUrl, '_blank');
+  }
+
+  function openInCoreWallet() {
     const currentUrl = window.location.href;
     const dappUrl = encodeURIComponent(currentUrl);
-
-    // Try Core Wallet first (better for Avalanche)
     const coreWalletUrl = `https://wallet.avax.network/dapp?url=${dappUrl}`;
+    window.open(coreWalletUrl, '_blank');
+  }
 
-    // Fallback to MetaMask
-    const metamaskUrl = `https://metamask.app.link/dapp/${window.location.host}${window.location.pathname}`;
-
-    // Try opening Core Wallet
-    window.location.href = coreWalletUrl;
-
-    // If user doesn't have Core, show instructions after a delay
-    setTimeout(() => {
-      const shouldTryMetaMask = confirm(
-        "Don't have Core Wallet? Click OK to try MetaMask instead."
-      );
-      if (shouldTryMetaMask) {
-        window.location.href = metamaskUrl;
-      }
-    }, 2000);
+  function copyUrlForWallet() {
+    navigator.clipboard.writeText(window.location.href);
+    toast.success('URL copied! Open your wallet browser and paste the URL');
   }
 
   async function connectWallet() {
     if (typeof window === 'undefined') return;
 
-    // Mobile: Deep link to wallet app if no provider detected
+    // Mobile: Show wallet options modal if no provider detected
     if (isMobile() && !window.ethereum) {
-      openWalletApp();
+      setShowMobileOptions(true);
       return;
     }
 
@@ -194,6 +190,57 @@ export default function WalletConnectButton() {
   function handleDisconnect() {
     disconnect();
     toast.success('Wallet disconnected');
+  }
+
+  // Mobile Wallet Options Modal
+  if (showMobileOptions) {
+    return (
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div className="bg-dark-light rounded-3xl shadow-2xl max-w-md w-full p-6 border border-primary/20">
+          <h2 className="text-2xl font-bold text-white mb-2">Connect Wallet</h2>
+          <p className="text-gray-400 text-sm mb-6">
+            Choose how you want to connect your wallet
+          </p>
+
+          <div className="space-y-3">
+            <button
+              onClick={openInMetaMask}
+              className="w-full px-6 py-4 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white rounded-xl font-semibold transition shadow-lg flex items-center justify-center gap-3"
+            >
+              <span className="text-2xl">🦊</span>
+              Open in MetaMask
+            </button>
+
+            <button
+              onClick={openInCoreWallet}
+              className="w-full px-6 py-4 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white rounded-xl font-semibold transition shadow-lg flex items-center justify-center gap-3"
+            >
+              <span className="text-2xl">⛰️</span>
+              Open in Core Wallet
+            </button>
+
+            <button
+              onClick={copyUrlForWallet}
+              className="w-full px-6 py-4 bg-dark border border-primary/30 hover:border-primary/50 text-white rounded-xl font-semibold transition flex items-center justify-center gap-3"
+            >
+              <span className="text-2xl">📋</span>
+              Copy URL for Wallet Browser
+            </button>
+          </div>
+
+          <button
+            onClick={() => setShowMobileOptions(false)}
+            className="w-full mt-4 px-6 py-3 text-gray-400 hover:text-white transition font-semibold"
+          >
+            Cancel
+          </button>
+
+          <p className="text-xs text-gray-500 text-center mt-4">
+            Open this dApp inside your wallet's browser to connect
+          </p>
+        </div>
+      </div>
+    );
   }
 
   if (isConnecting) {
