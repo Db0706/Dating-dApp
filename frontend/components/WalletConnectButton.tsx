@@ -192,91 +192,86 @@ export default function WalletConnectButton() {
     toast.success('Wallet disconnected');
   }
 
-  // Mobile Wallet Options Modal
-  if (showMobileOptions) {
-    return (
-      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[9999] flex items-end sm:items-center justify-center p-4 overflow-y-auto">
-        <div className="bg-dark-light rounded-3xl shadow-2xl max-w-md w-full p-5 border border-primary/20 my-auto">
-          <h2 className="text-xl font-bold text-white mb-1">Connect Wallet</h2>
-          <p className="text-gray-400 text-xs mb-4">
-            Choose how you want to connect your wallet
-          </p>
-
-          <div className="space-y-2.5">
-            <button
-              onClick={openInMetaMask}
-              className="w-full px-5 py-3 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white rounded-xl font-semibold transition shadow-lg flex items-center justify-center gap-2 text-sm"
-            >
-              <span className="text-xl">🦊</span>
-              Open in MetaMask
-            </button>
-
-            <button
-              onClick={openInCoreWallet}
-              className="w-full px-5 py-3 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white rounded-xl font-semibold transition shadow-lg flex items-center justify-center gap-2 text-sm"
-            >
-              <span className="text-xl">⛰️</span>
-              Open in Core Wallet
-            </button>
-
-            <button
-              onClick={copyUrlForWallet}
-              className="w-full px-5 py-3 bg-dark border border-primary/30 hover:border-primary/50 text-white rounded-xl font-semibold transition flex items-center justify-center gap-2 text-sm"
-            >
-              <span className="text-xl">📋</span>
-              Copy URL
-            </button>
-          </div>
-
-          <button
-            onClick={() => setShowMobileOptions(false)}
-            className="w-full mt-3 px-5 py-2.5 text-gray-400 hover:text-white transition font-semibold text-sm"
-          >
-            Cancel
-          </button>
-
-          <p className="text-[10px] text-gray-500 text-center mt-3">
-            Open this dApp inside your wallet's browser to connect
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  if (isConnecting) {
-    return (
-      <button
-        disabled
-        className="px-3 py-1.5 md:px-4 md:py-2 bg-gray-600 text-white rounded-full font-semibold text-xs md:text-sm"
-      >
-        Connecting...
-      </button>
-    );
-  }
-
-  if (isConnected && address) {
-    return (
-      <div className="flex items-center gap-2">
-        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-dark-light rounded-full border border-primary/20">
-          <span className="text-accent font-bold text-sm">{parseFloat(heartBalance).toFixed(0)}</span>
-          <span className="text-secondary text-xs">HEART</span>
-        </div>
-        <button
-          onClick={handleDisconnect}
-          className="px-3 py-1.5 md:px-4 md:py-2 bg-primary hover:bg-primary/80 text-white rounded-full font-semibold transition text-xs md:text-sm"
-        >
-          {shortenAddress(address, 2)}
-        </button>
-      </div>
-    );
-  }
-
   return (
-    <button
-      onClick={connectWallet}
-      className="px-4 py-1.5 md:px-6 md:py-2 bg-primary hover:bg-primary/80 text-white rounded-full font-semibold transition shadow-lg text-xs md:text-sm whitespace-nowrap"
-    >
-      Connect Wallet
-    </button>
+    <>
+      {/* Mobile Wallet Options Modal */}
+      {showMobileOptions && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-4 overflow-y-auto" style={{ zIndex: 9999 }}>
+          <div className="bg-dark-light rounded-3xl shadow-2xl max-w-md w-full p-5 border border-primary/20 my-auto">
+            <h2 className="text-xl font-bold text-white mb-1">Connect Wallet</h2>
+            <p className="text-gray-400 text-xs mb-4">
+              Choose how you want to connect your wallet
+            </p>
+
+            <div className="space-y-2.5">
+              <button
+                onClick={openInMetaMask}
+                className="w-full px-5 py-3 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white rounded-xl font-semibold transition shadow-lg flex items-center justify-center gap-2 text-sm"
+              >
+                <span className="text-xl">🦊</span>
+                Open in MetaMask
+              </button>
+
+              <button
+                onClick={openInCoreWallet}
+                className="w-full px-5 py-3 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white rounded-xl font-semibold transition shadow-lg flex items-center justify-center gap-2 text-sm"
+              >
+                <span className="text-xl">⛰️</span>
+                Open in Core Wallet
+              </button>
+
+              <button
+                onClick={copyUrlForWallet}
+                className="w-full px-5 py-3 bg-dark border border-primary/30 hover:border-primary/50 text-white rounded-xl font-semibold transition flex items-center justify-center gap-2 text-sm"
+              >
+                <span className="text-xl">📋</span>
+                Copy URL
+              </button>
+            </div>
+
+            <button
+              onClick={() => setShowMobileOptions(false)}
+              className="w-full mt-3 px-5 py-2.5 text-gray-400 hover:text-white transition font-semibold text-sm"
+            >
+              Cancel
+            </button>
+
+            <p className="text-[10px] text-gray-500 text-center mt-3">
+              Open this dApp inside your wallet's browser to connect
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Button States */}
+      {isConnecting ? (
+        <button
+          disabled
+          className="px-3 py-1.5 md:px-4 md:py-2 bg-gray-600 text-white rounded-full font-semibold text-xs md:text-sm"
+        >
+          Connecting...
+        </button>
+      ) : isConnected && address ? (
+        <div className="flex items-center gap-2">
+          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-dark-light rounded-full border border-primary/20">
+            <span className="text-accent font-bold text-sm">{parseFloat(heartBalance).toFixed(0)}</span>
+            <span className="text-secondary text-xs">HEART</span>
+          </div>
+          <button
+            onClick={handleDisconnect}
+            className="px-3 py-1.5 md:px-4 md:py-2 bg-primary hover:bg-primary/80 text-white rounded-full font-semibold transition text-xs md:text-sm"
+          >
+            {shortenAddress(address, 2)}
+          </button>
+        </div>
+      ) : (
+        <button
+          onClick={connectWallet}
+          className="px-4 py-1.5 md:px-6 md:py-2 bg-primary hover:bg-primary/80 text-white rounded-full font-semibold transition shadow-lg text-xs md:text-sm whitespace-nowrap"
+        >
+          Connect Wallet
+        </button>
+      )}
+    </>
   );
 }
