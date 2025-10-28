@@ -1,0 +1,31 @@
+{
+  "name": "dating-dapp-contracts",
+  "version": "1.0.0",
+  "description": "Smart contracts for Dating dApp on Avalanche",
+  "main": "index.js",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:fuji": "hardhat run scripts/deploy.js --network fuji",
+    "deploy:local": "hardhat run scripts/deploy.js --network hardhat",
+    "verify:fuji": "hardhat verify --network fuji",
+    "node": "hardhat node"
+  },
+  "keywords": [
+    "dating",
+    "dapp",
+    "avalanche",
+    "blockchain",
+    "nft"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.19.4"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.1",
+    "dotenv": "^16.3.1"
+  }
+}

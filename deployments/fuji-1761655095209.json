@@ -1,0 +1,18 @@
+{
+  "network": "fuji",
+  "chainId": 43113,
+  "deployer": "0x25BcbeD64ef99601dE2cfDC9E581dEf8536996df",
+  "timestamp": "2025-10-28T12:38:15.208Z",
+  "contracts": {
+    "HeartToken": "0x285278f3a7b831e4c1aE69c846506731bcfcaB65",
+    "MatchNFT": "0xa85427c693D54B49732b6a292eB55994F22EE650",
+    "DatingController": "0xCaE890ab308b0d61D7514Ce184aC278656C623d1"
+  },
+  "settings": {
+    "initialSupply": "1000000000.0",
+    "matchReward": "10.0",
+    "likeReward": "1.0",
+    "boostPrice": "0.01",
+    "boostDuration": "30 minutes"
+  }
+}
