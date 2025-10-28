@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { ethers } from 'ethers';
 import { useWalletStore } from '@/lib/store';
 import {
@@ -192,56 +193,58 @@ export default function WalletConnectButton() {
     toast.success('Wallet disconnected');
   }
 
+  const modalContent = showMobileOptions ? (
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-4 overflow-y-auto" style={{ zIndex: 9999 }}>
+      <div className="bg-dark-light rounded-3xl shadow-2xl max-w-md w-full p-5 border border-primary/20 my-auto">
+        <h2 className="text-xl font-bold text-white mb-1">Connect Wallet</h2>
+        <p className="text-gray-400 text-xs mb-4">
+          Choose how you want to connect your wallet
+        </p>
+
+        <div className="space-y-2.5">
+          <button
+            onClick={openInMetaMask}
+            className="w-full px-5 py-3 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white rounded-xl font-semibold transition shadow-lg flex items-center justify-center gap-2 text-sm"
+          >
+            <span className="text-xl">🦊</span>
+            Open in MetaMask
+          </button>
+
+          <button
+            onClick={openInCoreWallet}
+            className="w-full px-5 py-3 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white rounded-xl font-semibold transition shadow-lg flex items-center justify-center gap-2 text-sm"
+          >
+            <span className="text-xl">⛰️</span>
+            Open in Core Wallet
+          </button>
+
+          <button
+            onClick={copyUrlForWallet}
+            className="w-full px-5 py-3 bg-dark border border-primary/30 hover:border-primary/50 text-white rounded-xl font-semibold transition flex items-center justify-center gap-2 text-sm"
+          >
+            <span className="text-xl">📋</span>
+            Copy URL
+          </button>
+        </div>
+
+        <button
+          onClick={() => setShowMobileOptions(false)}
+          className="w-full mt-3 px-5 py-2.5 text-gray-400 hover:text-white transition font-semibold text-sm"
+        >
+          Cancel
+        </button>
+
+        <p className="text-[10px] text-gray-500 text-center mt-3">
+          Open this dApp inside your wallet's browser to connect
+        </p>
+      </div>
+    </div>
+  ) : null;
+
   return (
     <>
-      {/* Mobile Wallet Options Modal */}
-      {showMobileOptions && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-4 overflow-y-auto" style={{ zIndex: 9999 }}>
-          <div className="bg-dark-light rounded-3xl shadow-2xl max-w-md w-full p-5 border border-primary/20 my-auto">
-            <h2 className="text-xl font-bold text-white mb-1">Connect Wallet</h2>
-            <p className="text-gray-400 text-xs mb-4">
-              Choose how you want to connect your wallet
-            </p>
-
-            <div className="space-y-2.5">
-              <button
-                onClick={openInMetaMask}
-                className="w-full px-5 py-3 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white rounded-xl font-semibold transition shadow-lg flex items-center justify-center gap-2 text-sm"
-              >
-                <span className="text-xl">🦊</span>
-                Open in MetaMask
-              </button>
-
-              <button
-                onClick={openInCoreWallet}
-                className="w-full px-5 py-3 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white rounded-xl font-semibold transition shadow-lg flex items-center justify-center gap-2 text-sm"
-              >
-                <span className="text-xl">⛰️</span>
-                Open in Core Wallet
-              </button>
-
-              <button
-                onClick={copyUrlForWallet}
-                className="w-full px-5 py-3 bg-dark border border-primary/30 hover:border-primary/50 text-white rounded-xl font-semibold transition flex items-center justify-center gap-2 text-sm"
-              >
-                <span className="text-xl">📋</span>
-                Copy URL
-              </button>
-            </div>
-
-            <button
-              onClick={() => setShowMobileOptions(false)}
-              className="w-full mt-3 px-5 py-2.5 text-gray-400 hover:text-white transition font-semibold text-sm"
-            >
-              Cancel
-            </button>
-
-            <p className="text-[10px] text-gray-500 text-center mt-3">
-              Open this dApp inside your wallet's browser to connect
-            </p>
-          </div>
-        </div>
-      )}
+      {/* Mobile Wallet Options Modal - Rendered via Portal */}
+      {typeof document !== 'undefined' && modalContent && createPortal(modalContent, document.body)}
 
       {/* Button States */}
       {isConnecting ? (
